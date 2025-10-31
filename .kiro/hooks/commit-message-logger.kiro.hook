@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Commit Message Logger",
+  "description": "Automatically logs every commit message to commits-log.md with date and time when commits are made to the repository",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      ".git/COMMIT_EDITMSG"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A new commit has been made to the repository. Please read the commit message from .git/COMMIT_EDITMSG and append it to the commits-log.md file in the following format:\n\n## [Current Date and Time]\n**Commit Message:** [The actual commit message]\n\n---\n\nIf commits-log.md doesn't exist, create it first with a header \"# Commit Log\". Make sure to include the current date and time in a readable format (e.g., \"December 15, 2024 at 3:45 PM\")."
+  }
+}
