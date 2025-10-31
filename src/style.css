@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 text-gray-900;
+  }
+  
+  /* Mobile-first optimizations */
+  html {
+    -webkit-tap-highlight-color: rgba(255, 159, 0, 0.3);
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+  
+  /* Smooth scrolling for better mobile experience */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  
+  /* Ensure touch targets are at least 44x44px */
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better touch feedback with transition */
+  button:active,
+  a:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease-in-out;
+  }
+  
+  /* Prevent text selection on buttons for better mobile UX */
+  button {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Optimize font rendering on mobile */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Improve touch scrolling on iOS */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent pull-to-refresh on mobile when not needed */
+  body {
+    overscroll-behavior-y: contain;
+  }
+}
+
+@layer utilities {
+  /* Papel Picado Pattern Background */
+  .papel-picado-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffc300' fill-opacity='0.08'%3E%3Cpath d='M40 0l8 24h24l-20 16 8 24-20-16-20 16 8-24-20-16h24z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 80px 80px;
+  }
+
+  /* Marigold Flower Accent */
+  .marigold-accent {
+    position: relative;
+  }
+  
+  .marigold-accent::before {
+    content: '🌼';
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  /* Día de Muertos Gradient */
+  .dia-gradient {
+    background: linear-gradient(135deg, #ff9100 0%, #ff0066 50%, #6600ff 100%);
+  }
+
+  /* Altar Glow Effect */
+  .altar-glow {
+    box-shadow: 0 0 20px rgba(255, 195, 0, 0.3), 0 0 40px rgba(255, 0, 102, 0.2);
+  }
+
+  /* Custom utility for touch-friendly spacing */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Safe area insets for notched devices */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  /* Prevent zoom on input focus (iOS) */
+  @media screen and (max-width: 640px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+  }
+  
+  /* Responsive container with proper padding */
+  .container-responsive {
+    @apply w-full mx-auto px-4;
+  }
+  
+  @media (min-width: 640px) {
+    .container-responsive {
+      @apply px-6;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container-responsive {
+      @apply px-8;
+    }
+  }
+  
+  /* Touch-friendly drag area */
+  .drag-area {
+    @apply cursor-pointer select-none;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Responsive text sizes */
+  .text-responsive-xs {
+    @apply text-xs;
+  }
+  
+  @media (min-width: 640px) {
+    .text-responsive-xs {
+      @apply text-sm;
+    }
+  }
+  
+  .text-responsive-sm {
+    @apply text-sm;
+  }
+  
+  @media (min-width: 640px) {
+    .text-responsive-sm {
+      @apply text-base;
+    }
+  }
+  
+  .text-responsive-base {
+    @apply text-base;
+  }
+  
+  @media (min-width: 640px) {
+    .text-responsive-base {
+      @apply text-lg;
+    }
+  }
+  
+  /* Responsive spacing */
+  .spacing-responsive {
+    @apply space-y-4;
+  }
+  
+  @media (min-width: 640px) {
+    .spacing-responsive {
+      @apply space-y-6;
+    }
+  }
+}

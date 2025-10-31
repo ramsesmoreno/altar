@@ -1,0 +1,23 @@
+{
+  "version": "1",
+  "storage": {
+    "aws_region": "us-east-1",
+    "bucket_name": "amplify-altar-storage"
+  },
+  "custom": {
+    "API": {
+      "endpoints": [
+        {
+          "name": "uploadPhoto",
+          "endpoint": "/api/upload-photo",
+          "region": "us-east-1"
+        },
+        {
+          "name": "generateAltar",
+          "endpoint": "/api/generate-altar",
+          "region": "us-east-1"
+        }
+      ]
+    }
+  }
+}
