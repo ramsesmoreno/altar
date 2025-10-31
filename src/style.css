@@ -28,7 +28,7 @@
   input[type="submit"],
   input[type="reset"] {
     min-height: 44px;
-    min-width: 44px;
+    min-width: 45px;
   }
   
   /* Better touch feedback with transition */
