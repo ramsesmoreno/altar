@@ -110,6 +110,17 @@ const isTouching = ref(false);
 const previewUrl = ref<string | null>(null);
 const errorMessage = ref<string | null>(null);
 
+const clearPreview = () => {
+  if (previewUrl.value) {
+    URL.revokeObjectURL(previewUrl.value);
+    previewUrl.value = null;
+  }
+};
+
+const clearError = () => {
+  errorMessage.value = null;
+};
+
 // Watch for external changes to modelValue
 watch(() => props.modelValue, (newFile) => {
   if (newFile) {
@@ -215,13 +226,6 @@ const generatePreview = (file: File) => {
   }
 };
 
-const clearPreview = () => {
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value);
-    previewUrl.value = null;
-  }
-};
-
 const clearFile = () => {
   clearPreview();
   clearError();
@@ -231,9 +235,5 @@ const clearFile = () => {
   if (fileInputRef.value) {
     fileInputRef.value.value = '';
   }
-};
-
-const clearError = () => {
-  errorMessage.value = null;
 };
 </script>
