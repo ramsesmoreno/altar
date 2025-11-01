@@ -1,4 +1,3 @@
-import { Amplify } from 'aws-amplify';
 import type {
   UploadPhotoResponse,
   GenerateAltarRequest,
@@ -37,24 +36,17 @@ export class AmplifyServiceError extends Error {
 }
 
 /**
- * Gets the API endpoint URL from Amplify configuration
+ * Gets the full API endpoint URL by combining base URL with relative path
  */
-function getApiEndpoint(endpointName: string): string {
-  const config = Amplify.getConfig() as any;
-  
-  if (config?.custom?.API?.endpoints) {
-    const endpoint = config.custom.API.endpoints.find((ep: any) => ep.name === endpointName);
-    if (endpoint) {
-      return endpoint.endpoint;
-    }
+function getFullApiEndpoint(relativePath: string): string {
+  // If it's already a full URL, return as is
+  if (relativePath.startsWith('http')) {
+    return relativePath;
   }
   
-  throw new AmplifyServiceError(
-    `No se encontró el endpoint de API: ${endpointName}`,
-    'API_ENDPOINT_NOT_FOUND',
-    undefined,
-    false
-  );
+  // For deployed apps, use the current domain
+  const baseUrl = window.location.origin;
+  return `${baseUrl}${relativePath}`;
 }
 
 /**
@@ -199,10 +191,10 @@ export async function uploadPhoto(
     const formData = new FormData();
     formData.append('file', photoFile);
 
-    // Get the API endpoint URL
-    const apiEndpoint = getApiEndpoint('uploadPhoto');
+    // Get the full API endpoint URL
+    const apiEndpoint = getFullApiEndpoint('/api/upload-photo');
     
-    // Make direct fetch call with timeout since we have the full endpoint
+    // Make direct fetch call with timeout
     const uploadPromise = fetch(apiEndpoint, {
       method: 'POST',
       body: formData,
@@ -309,10 +301,10 @@ export async function generateAltar(
       );
     }
 
-    // Get the API endpoint URL
-    const apiEndpoint = getApiEndpoint('generateAltar');
+    // Get the full API endpoint URL
+    const apiEndpoint = getFullApiEndpoint('/api/generate-altar');
     
-    // Make direct fetch call with timeout since we have the full endpoint
+    // Make direct fetch call with timeout
     const generatePromise = fetch(apiEndpoint, {
       method: 'POST',
       body: JSON.stringify(request),
