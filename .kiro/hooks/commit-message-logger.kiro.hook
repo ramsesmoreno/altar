@@ -1,13 +1,10 @@
 {
   "enabled": true,
   "name": "Commit Message Logger",
-  "description": "Automatically logs every commit message to commits-log.md with date and time when commits are made to the repository",
+  "description": "Automatically logs every commit message to commits-log.md in root with date and time when commits are made to the repository",
   "version": "1",
   "when": {
-    "type": "fileEdited",
-    "patterns": [
-      ".git/COMMIT_EDITMSG"
-    ]
+    "type": "userTriggered"
   },
   "then": {
     "type": "askAgent",

@@ -1,4 +1,4 @@
-import { post } from 'aws-amplify/api';
+import { Amplify } from 'aws-amplify';
 import type {
   UploadPhotoResponse,
   GenerateAltarRequest,
@@ -34,6 +34,27 @@ export class AmplifyServiceError extends Error {
     super(message);
     this.name = 'AmplifyServiceError';
   }
+}
+
+/**
+ * Gets the API endpoint URL from Amplify configuration
+ */
+function getApiEndpoint(endpointName: string): string {
+  const config = Amplify.getConfig() as any;
+  
+  if (config?.custom?.API?.endpoints) {
+    const endpoint = config.custom.API.endpoints.find((ep: any) => ep.name === endpointName);
+    if (endpoint) {
+      return endpoint.endpoint;
+    }
+  }
+  
+  throw new AmplifyServiceError(
+    `No se encontró el endpoint de API: ${endpointName}`,
+    'API_ENDPOINT_NOT_FOUND',
+    undefined,
+    false
+  );
 }
 
 /**
@@ -178,22 +199,32 @@ export async function uploadPhoto(
     const formData = new FormData();
     formData.append('file', photoFile);
 
-    // Make API call with timeout
-    const uploadPromise = post({
-      apiName: 'default',
-      path: '/api/upload-photo',
-      options: {
-        body: formData,
-      },
-    }).response;
+    // Get the API endpoint URL
+    const apiEndpoint = getApiEndpoint('uploadPhoto');
+    
+    // Make direct fetch call with timeout since we have the full endpoint
+    const uploadPromise = fetch(apiEndpoint, {
+      method: 'POST',
+      body: formData,
+    });
 
     const response = await Promise.race([
       uploadPromise,
       createTimeoutPromise(REQUEST_TIMEOUT),
     ]);
 
+    // Check if response is ok
+    if (!response.ok) {
+      throw new AmplifyServiceError(
+        `Error del servidor: ${response.status}`,
+        'SERVER_ERROR',
+        response.status,
+        response.status >= 500
+      );
+    }
+
     // Parse response body
-    const responseBody = await response.body.json() as unknown;
+    const responseBody = await response.json() as unknown;
     
     // Validate response structure
     if (!responseBody || typeof responseBody !== 'object') {
@@ -278,25 +309,35 @@ export async function generateAltar(
       );
     }
 
-    // Make API call with timeout
-    const generatePromise = post({
-      apiName: 'default',
-      path: '/api/generate-altar',
-      options: {
-        body: JSON.stringify(request),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    // Get the API endpoint URL
+    const apiEndpoint = getApiEndpoint('generateAltar');
+    
+    // Make direct fetch call with timeout since we have the full endpoint
+    const generatePromise = fetch(apiEndpoint, {
+      method: 'POST',
+      body: JSON.stringify(request),
+      headers: {
+        'Content-Type': 'application/json',
       },
-    }).response;
+    });
 
     const response = await Promise.race([
       generatePromise,
       createTimeoutPromise(REQUEST_TIMEOUT),
     ]);
 
+    // Check if response is ok
+    if (!response.ok) {
+      throw new AmplifyServiceError(
+        `Error del servidor: ${response.status}`,
+        'SERVER_ERROR',
+        response.status,
+        response.status >= 500
+      );
+    }
+
     // Parse response body
-    const responseBody = await response.body.json() as unknown;
+    const responseBody = await response.json() as unknown;
 
     // Validate response structure
     if (!responseBody || typeof responseBody !== 'object') {
